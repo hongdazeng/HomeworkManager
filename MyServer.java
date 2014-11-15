@@ -6,10 +6,13 @@ import java.text.*;
 
 public class MyServer implements Runnable {
 
-    String[] MyProblemList = new String[10];
-    String[] MyAnswerList = new String[10];
+    static ArrayList<String> classGrades = new ArrayList<String>();
+    static int totalProblemNumber = 0;
 
-    String[] StudentAnswerList = new String[10];
+    String[] MyProblemList = new String[totalProblemNumber];
+    String[] MyAnswerList = new String[totalProblemNumber];
+
+    String[] StudentAnswerList = new String[totalProblemNumber];
 
     final Socket socket;
 
@@ -23,7 +26,6 @@ public class MyServer implements Runnable {
             // socket open: make PrinterWriter and Scanner from it...
             String studentName = "";
             int studentScore = 0;
-            int studentInput = 0;
 
             parsefile("questions");
             parseans("answers");
@@ -35,23 +37,34 @@ public class MyServer implements Runnable {
 
             // read from input, and echo output...
             String line;
-            pw.printf("Please enter your name%n");
+            pw.printf("Please enter your name ");
             pw.flush();
-            System.out.printf("Welcome: %s%n", studentName);
             studentName = in.readLine();
+            pw.printf("Welcome " + studentName);
+            System.out.printf(studentName + " have connected%n");
+
+            if (studentName.equals("Teacher")) {
+                keepGoing = false;
+                Iterator it = classGrades.iterator( );
+                while (it.hasNext()) {
+                    System.out.println(it.next());
+                }
+            }
+
+
 
             while (keepGoing) {
                 //System.out.printf("%s says: %s%n", socket, line);
                 //pw.printf("echo: %s%n", line);
                 //pw.flush();
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < totalProblemNumber; i++) {
                     pw.printf(MyProblemList[i]);
                     pw.flush();
                     line = in.readLine();
                     if (line.equals(MyAnswerList[i])) {
                         studentScore++;
                     }
-                    if (i == 9) {
+                    if (i == (totalProblemNumber - 1)) {
                         keepGoing = false;
                     }
                 }
@@ -65,6 +78,9 @@ public class MyServer implements Runnable {
             writer.println("Name: " + studentName);
             writer.println("Score: " + studentScore);
             writer.println("Time: " + timeStamp);
+            String tobeadd = ("Time: " + timeStamp + " Name: " + studentName + " Score: " + studentScore);
+            System.out.println(tobeadd);
+            classGrades.add(tobeadd);
             writer.close();
             System.out.println(studentName + " is done");
 
@@ -105,6 +121,10 @@ public class MyServer implements Runnable {
 
     public static void main(String[] args) throws IOException {
         // allocate server socket at default port...
+        Scanner serverinputreader = new Scanner(System.in);
+        System.out.println("Please enter the expected number of questions ");
+        totalProblemNumber = serverinputreader.nextInt();
+        serverinputreader.nextLine();
         ServerSocket serverSocket = new ServerSocket(8888);
         System.out.printf("socket open, waiting for connections on %s%n",
                           serverSocket);
