@@ -50,16 +50,20 @@ public class MyServer implements Runnable {
                     if (line.equals(MyAnswerList[i])) {
                         studentScore++;
                     }
-                    if (i== 19){
+                    if (i == 19) {
                         keepGoing = false;
                     }
                 }
             }
 
-            PrintWriter writer = new PrintWriter(studentName + ".txt", "UTF-8");
+
+            pw.printf("Thank you!");
+            pw.flush();
+            PrintWriter writer = new PrintWriter(studentName + ".studentrecord", "UTF-8");
             writer.println("Name: " + studentName);
             writer.println("Score: " + studentScore);
             writer.close();
+            System.out.println(studentName + " is done");
 
             // input done, close connections...
             pw.close();
