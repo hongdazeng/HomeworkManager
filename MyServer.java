@@ -35,12 +35,11 @@ public class MyServer implements Runnable {
             BufferedReader in
                 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            // read from input, and echo output...
             String line;
             pw.printf("Please enter your name ");
             pw.flush();
             studentName = in.readLine();
-            pw.printf("Welcome " + studentName);
+            pw.printf("Welcome " + studentName + " %n");
             System.out.printf(studentName + " have connected%n");
 
             if (studentName.equals("Teacher")) {
@@ -78,9 +77,11 @@ public class MyServer implements Runnable {
             writer.println("Name: " + studentName);
             writer.println("Score: " + studentScore);
             writer.println("Time: " + timeStamp);
-            String tobeadd = ("Time: " + timeStamp + " Name: " + studentName + " Score: " + studentScore);
-            System.out.println(tobeadd);
-            classGrades.add(tobeadd);
+            if (!studentName.equals("Teacher")) {
+                String tobeadd = ("Time: " + timeStamp + " Name: " + studentName + " Score: " + studentScore);
+                System.out.println(tobeadd);
+                classGrades.add(tobeadd);
+            }
             writer.close();
             System.out.println(studentName + " is done");
 
