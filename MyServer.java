@@ -2,13 +2,14 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.text.*;
 
 public class MyServer implements Runnable {
 
-    String[] MyProblemList = new String[20];
-    String[] MyAnswerList = new String[20];
+    String[] MyProblemList = new String[10];
+    String[] MyAnswerList = new String[10];
 
-    String[] StudentAnswerList = new String[20];
+    String[] StudentAnswerList = new String[10];
 
     final Socket socket;
 
@@ -43,14 +44,14 @@ public class MyServer implements Runnable {
                 //System.out.printf("%s says: %s%n", socket, line);
                 //pw.printf("echo: %s%n", line);
                 //pw.flush();
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 10; i++) {
                     pw.printf(MyProblemList[i]);
                     pw.flush();
                     line = in.readLine();
                     if (line.equals(MyAnswerList[i])) {
                         studentScore++;
                     }
-                    if (i == 19) {
+                    if (i == 9) {
                         keepGoing = false;
                     }
                 }
@@ -59,9 +60,11 @@ public class MyServer implements Runnable {
 
             pw.printf("Thank you!");
             pw.flush();
-            PrintWriter writer = new PrintWriter(studentName + ".studentrecord", "UTF-8");
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            PrintWriter writer = new PrintWriter(studentName + " " + timeStamp + ".studentrecord", "UTF-8");
             writer.println("Name: " + studentName);
             writer.println("Score: " + studentScore);
+            writer.println("Time: " + timeStamp);
             writer.close();
             System.out.println(studentName + " is done");
 
