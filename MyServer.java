@@ -12,6 +12,7 @@ public class MyServer implements Runnable {
 
     static String questionfiles = "";
     static String answerfiles = "";
+    static boolean writeeachintofile = true;
 
     String[] MyProblemList = new String[totalProblemNumber];
     String[] MyAnswerList = new String[totalProblemNumber];
@@ -81,17 +82,19 @@ public class MyServer implements Runnable {
             pw.printf("Thank you!");
             pw.flush();
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-            PrintWriter writer = new PrintWriter(studentName + " " + timeStamp + ".studentrecord", "UTF-8");
-            writer.println("Name: " + studentName);
-            writer.println("Score: " + studentScore);
-            writer.println("Time: " + timeStamp);
+            if (writeeachintofile) {
+                PrintWriter writer = new PrintWriter(studentName + " " + timeStamp + ".studentrecord", "UTF-8");
+                writer.println("Name: " + studentName);
+                writer.println("Score: " + studentScore);
+                writer.println("Time: " + timeStamp);
+                writer.close();
+            }
             if (!studentName.equals("Teacher")) {
                 String tobeadd = ("Time: " + timeStamp + " Name: " + studentName + " Score: " + studentScore);
                 System.out.println(tobeadd);
                 classGrades.add(tobeadd);
                 pw2.println(tobeadd);
             }
-            writer.close();
             System.out.println(studentName + " is done");
             pw.println(" Your score is " + studentScore);
 
@@ -143,6 +146,11 @@ public class MyServer implements Runnable {
         System.out.println("Please enter the expected number of questions ");
         totalProblemNumber = serverinputreader.nextInt();
         serverinputreader.nextLine();
+        System.out.println("Would you like to save each student's attempts? [Y/N]");
+        String userdecision =  serverinputreader.nextLine();
+        if (userdecision.equalsIgnoreCase("N")) {
+            writeeachintofile = false;
+        }
         ServerSocket serverSocket = new ServerSocket(8888);
         System.out.printf("socket open, waiting for connections on %s%n",
                           serverSocket);
