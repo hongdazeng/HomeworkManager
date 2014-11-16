@@ -19,8 +19,7 @@ public class MyClient {
             Thread.sleep(400);
             if (in.ready()) {
                 while (in.ready()) {
-                    System.out.print(Character.toChars(in.read()));
-
+                    System.out.print(Character.toChars(in.read()));[]
                 }
             }
 
@@ -35,8 +34,6 @@ public class MyClient {
 
                     }
                 }
-
-
             }
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " +

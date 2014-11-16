@@ -8,6 +8,10 @@ public class MyServer implements Runnable {
 
     static ArrayList<String> classGrades = new ArrayList<String>();
     static int totalProblemNumber = 0;
+    static File file;
+
+    static String questionfiles = "";
+    static String answerfiles = "";
 
     String[] MyProblemList = new String[totalProblemNumber];
     String[] MyAnswerList = new String[totalProblemNumber];
@@ -34,6 +38,10 @@ public class MyServer implements Runnable {
             PrintWriter pw = new PrintWriter(socket.getOutputStream());
             BufferedReader in
                 = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            FileWriter fw = new FileWriter(file, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw2 = new PrintWriter(bw);
 
             String line;
             pw.printf("Please enter your name ");
@@ -81,12 +89,15 @@ public class MyServer implements Runnable {
                 String tobeadd = ("Time: " + timeStamp + " Name: " + studentName + " Score: " + studentScore);
                 System.out.println(tobeadd);
                 classGrades.add(tobeadd);
+                pw2.println(tobeadd);
             }
             writer.close();
             System.out.println(studentName + " is done");
+            pw.println(" Your score is " + studentScore);
 
             // input done, close connections...
             pw.close();
+            pw2.close();
             in.close();
             socket.close();
         } catch (IOException e) {
@@ -122,6 +133,12 @@ public class MyServer implements Runnable {
 
     public static void main(String[] args) throws IOException {
         // allocate server socket at default port...
+        //
+        file = new File("Records.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
         Scanner serverinputreader = new Scanner(System.in);
         System.out.println("Please enter the expected number of questions ");
         totalProblemNumber = serverinputreader.nextInt();
